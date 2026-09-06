@@ -150,12 +150,12 @@ def cmd_diff(a):
         try:
             with open(a.current_file, encoding="utf-8-sig") as f:
                 cur = json.load(f)
-        except Exception as e:
+        except (OSError, ValueError, json.JSONDecodeError) as e:
             sys.exit(f"✗ 读取 --current-file 失败: {e}")
     else:
         try:
             cur = json.loads(a.current)
-        except Exception:
+        except (ValueError, json.JSONDecodeError):
             sys.exit("✗ --current 必须是 JSON 字符串; 若引号被命令行吞掉, 请改用 --current-file <path.json>")
     # 1) 注册表摘要校验 (防篡改)
     d_check = _sha(_canon({"anchor": a.anchor, "p_base": pbase}))
